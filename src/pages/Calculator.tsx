@@ -5,7 +5,10 @@ interface CalculatorInputs {
   deliveriesPerYear: number;
   denialRate: number;
   claimAmount: number;
-  lagTimes: number;
+  csectionCount: number;
+  inductionCount: number;
+  csectionlagTimes: number;
+  inductionlagTimes: number;
   nurseSalary: number;
   nurseCount: number;
   adminCount: number;
@@ -17,7 +20,8 @@ interface CalculatorInputs {
 interface CalculationResults {
   denialSavings: number;
   roomUtilizationSavings: number;
-  nurseTimeSavings: number;
+  roomUtilizationSavingsMultiplied: number;
+  nurseTimeSavingsShift: number;
   adminTimeSavings: number;
   providerTimeSavings: number;
   totalSavings: number;
@@ -36,8 +40,12 @@ const Calculator = () => {
   const [inputs, setInputs] = useState<CalculatorInputs>({
     deliveriesPerYear: 1000,
     denialRate: 15,
-    claimAmount: 5000,
+    claimAmount: 10000,
     lagTimes: 4,
+    csectionCount: 250,
+    inductionCount: 350,
+    csectionlagTimes: 3.5,
+    inductionlagTimes: 3.0,
     nurseSalary: 400,
     adminCount: 5,
     nurseCount: 5,
@@ -62,28 +70,41 @@ const Calculator = () => {
 
   const tooltips = {
     deliveriesPerYear:
-      "Average number of deliveries your facility handles annually",
-    denialRate: "Current percentage of claims denied on first submission",
-    claimAmount: "Average amount billed per delivery",
-    lagTimes: "Average delay between room assignment and procedure start",
+      "Average number of deliveries your L&D performs annually, including vaginal deliveries and Cesarean sections.",
+    denialRate: "Current percentage of L&D claims denied on first-pass.",
+    claimAmount: "Average amount billed per delivery.",
+    lagTimes: "Average delay between admission and procedure start.",
+    csectionCount: "Average number of scheduled C-Sections per year.",
+    inductionCount: "Average number of scheduled inductions per year.",
+    csectionlagTimes:
+      "Average time in hours from room placement of a placement to start of a scheduled C-section.",
+    inductionlagTimes:
+      "Average time in hours from room placement of a patient to start of a scheduled induction of labor.",
     nurseSalary: "Average compensation per 12-hour shift",
-    adminCount: "Number of administrative staff involved in L&D",
-    nurseCount: "Number of nurses involved in L&D",
+    adminCount:
+      "Number of administrative staff per 12-hour shift including Unit Secretary, Unit Coordinator, Nurse Manager, Clinical Nurse Manager, Charge Nurse, Director of Women’s Services, Director of Maternal-Child Health, Perinatal Services Manager, Patient Care Coordinator, OB Hospitalist Program Director, Clinical Coordinator, Labor and Delivery Educator, Nurse Educator, Health Unit Clerk and Scheduler.",
+    nurseCount:
+      "Number of number of nurses scheduled on L&D per 12-hour shift.",
     adminSalary: "Average daily salary for administrative staff",
-    providerCount: "Number of providers (physicians, midwives) in L&D",
+    providerCount:
+      "Number of providers (hospitalists, private physicians, midwives, physician assistants) on L&D per 12-hour shift",
     providerSalary: "Average daily salary for providers",
   };
 
   const suggestions = {
-    deliveriesPerYear: "Typical: 500-5000",
-    denialRate: "Avg: 15-25%",
-    claimAmount: "Avg: $3-15k",
-    lagTimes: "Avg: 2-6 hrs",
+    deliveriesPerYear: "Typical: 500-10000",
+    denialRate: "Avg: 5-35%",
+    claimAmount: "Avg: $3-25k",
+    lagTimes: "Avg: 2-6 hours",
+    csectionCount: "Typical: 50-3000",
+    inductionCount: "Typical: 50-5000",
+    csectionlagTimes: "Avg: 2-6 hours",
+    inductionlagTimes: "Avg: 1.5-6 hours",
     nurseSalary: "Avg: $350-600",
-    adminCount: "Avg: 3-15",
+    adminCount: "Avg: 2-20",
     nurseCount: "Avg: 2-35",
     adminSalary: "Avg: $200-400",
-    providerCount: "Avg: 5-20",
+    providerCount: "Avg: 2-20",
     providerSalary: "Avg: $600-1.2k",
   };
 
@@ -102,22 +123,24 @@ const Calculator = () => {
       (inputs.denialRate / 100) *
       0.94;
     const roomUtilizationSavings =
-      inputs.deliveriesPerYear * inputs.claimAmount * 0.15;
-    const nurseTimeSavings = 3 * inputs.nurseSalary * 365;
-    const adminTimeSavings = 4 * inputs.adminSalary * inputs.adminCount * 365;
-    const providerTimeSavings =
-      5 * inputs.providerSalary * inputs.providerCount * 365;
+      inputs.csectionCount * inputs.csectionlagTimes +
+      inputs.inductionlagTimes * inputs.inductionCount;
+    const roomUtilizationSavingsMultiplied = roomUtilizationSavings * 0.45;
+    const nurseTimeSavingsShift = 3 * inputs.nurseCount;
+    const adminTimeSavings = 2 * inputs.adminCount;
+    const providerTimeSavings = 2.5 * inputs.providerCount;
     const totalSavings =
       denialSavings +
       roomUtilizationSavings +
-      nurseTimeSavings +
+      nurseTimeSavingsShift +
       adminTimeSavings +
       providerTimeSavings;
 
     setResults({
       denialSavings,
       roomUtilizationSavings,
-      nurseTimeSavings,
+      roomUtilizationSavingsMultiplied,
+      nurseTimeSavingsShift,
       adminTimeSavings,
       providerTimeSavings,
       totalSavings,
@@ -162,7 +185,7 @@ const Calculator = () => {
 
   const inputGroups = [
     {
-      title: "Facility Overview",
+      title: "Hospital Overview",
       inputs: [
         {
           key: "deliveriesPerYear",
@@ -174,40 +197,47 @@ const Calculator = () => {
         },
         {
           key: "claimAmount",
-          label: "Claim Amount",
-        },
-        {
-          key: "lagTimes",
-          label: "Lag Times",
+          label: "Average Claim Amount",
         },
       ],
     },
     {
-      title: "Staff Information",
+      title: "Lag Times Overview",
       inputs: [
         {
-          key: "nurseSalary",
-          label: "Nurse Salary",
+          key: "csectionCount",
+          label: "Annual Number of Scheduled C-Sections",
         },
         {
+          key: "csectionlagTimes",
+          label:
+            "Average Admission to Scheduled C-Section Start Lag Time in Hours",
+        },
+        {
+          key: "inductionCount",
+          label: "Annual Number of Scheduled Inductions",
+        },
+        {
+          key: "inductionlagTimes",
+          label:
+            "Average Admission to Scheduled Induction Start Lag Time in Hours",
+        },
+      ],
+    },
+    {
+      title: "Typical Weekday Staff Information",
+      inputs: [
+        {
           key: "nurseCount",
-          label: "Nurse Count",
+          label: "Average Nurse Count per Shift",
         },
         {
           key: "adminCount",
-          label: "Admin Staff Count",
-        },
-        {
-          key: "adminSalary",
-          label: "Admin Salary",
+          label: "Average Administrative Staff Count per Shift",
         },
         {
           key: "providerCount",
-          label: "Provider Count",
-        },
-        {
-          key: "providerSalary",
-          label: "Provider Salary",
+          label: "Average Provider Count per Shift",
         },
       ],
     },
@@ -353,7 +383,7 @@ const Calculator = () => {
               <div className="space-y-6">
                 <div className="bg-birthmodel-blue-light/30 border-l-4 border-birthmodel-teal p-6 rounded-xl">
                   <h3 className="text-lg font-medium text-birthmodel-teal mb-2">
-                    Reduced Claim Denials
+                    Reduced First-Pass Claim Denials
                   </h3>
                   <div className="flex items-baseline">
                     <p className="text-3xl font-bold text-birthmodel-teal">
@@ -364,24 +394,26 @@ const Calculator = () => {
                     </span>
                   </div>
                   <p className="text-sm text-birthmodel-gray mt-2">
-                    Based on 94% reduction in first-pass denials
+                    Based on a 94% reduction in first-pass denials
                   </p>
                 </div>
 
                 <div className="bg-birthmodel-blue-light/30 border-l-4 border-birthmodel-teal p-6 rounded-xl">
                   <h3 className="text-lg font-medium text-birthmodel-teal mb-2">
-                    Room Utilization Optimization
+                    Room and Patient Time Optimization
                   </h3>
                   <div className="flex items-baseline">
                     <p className="text-3xl font-bold text-birthmodel-teal">
-                      ${results.roomUtilizationSavings.toLocaleString()}
+                      {results.roomUtilizationSavingsMultiplied.toLocaleString()}
                     </p>
                     <span className="ml-2 text-sm text-birthmodel-gray">
-                      per year
+                      hours per year saved with Birth Model
                     </span>
                   </div>
                   <p className="text-sm text-birthmodel-gray mt-2">
-                    Based on 15% improvement in efficiency
+                    Based on 45% improvement in efficiency from the current{" "}
+                    {results.roomUtilizationSavings.toLocaleString()} hours per
+                    year underutilized
                   </p>
                 </div>
 
@@ -395,7 +427,7 @@ const Calculator = () => {
                         Nurses
                       </p>
                       <p className="text-xl font-bold text-birthmodel-teal">
-                        ${results.nurseTimeSavings.toLocaleString()}
+                        ${results.nurseTimeSavingsShift.toLocaleString()}
                       </p>
                       <p className="text-xs text-birthmodel-gray mt-1">
                         3 hrs/shift saved
