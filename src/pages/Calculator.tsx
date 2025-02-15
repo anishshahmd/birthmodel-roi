@@ -632,7 +632,7 @@ const Calculator = () => {
  Cancel
  </button>
  <button
- onClick={() => submitToGoogleSheets(contactForm)}
+ onClick={() => submitToGoogleSheets(contactForm,results)}
  type="submit"
  className="w-full sm:w-auto px-6 py-3 bg-birthmodel-teal text-white rounded-lg hover:bg-opacity-90 transition-colors"
  >
