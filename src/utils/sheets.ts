@@ -1,26 +1,29 @@
-import { ContactForm } from '../types';
+import { ContactForm,CalculationResults } from '../types';
 
-const SHEET_ID = 'YOUR_SHEET_ID';
-const SHEET_NAME = 'Form Responses';
-const SCRIPT_URL = `https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec`;
+const BIN_ID ="67aef93eacd3cb34a8e1bed7"
+const BIN_API_KEY="$2a$10$.r5T7AbIFck3CI7kh.gRJuuZPZFceeWTuWQtnfwUJDeVzRtMGdbQ2"
 
-export const submitToGoogleSheets = async (formData: ContactForm & { totalSavings: number }) => {
+export const submitToGoogleSheets = async (formData: ContactForm,results:CalculationResults) => {
+  const combined ={...formData,...results}
   try {
-    const response = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...formData,
-        timestamp: new Date().toISOString(),
-      }),
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+      headers: { "X-Master-Key": BIN_API_KEY },
     });
 
-    return true;
+    const jsonData = await res.json();
+    const updatedData = [...jsonData.record.submissions, combined];
+    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Master-Key": BIN_API_KEY,
+      },
+      body: JSON.stringify({ submissions: updatedData }),
+    });
+
+    alert("Data saved successfully!");
   } catch (error) {
-    console.error('Error submitting to Google Sheets:', error);
-    return false;
+    console.error("Error saving data:", error);
   }
+  
 };
