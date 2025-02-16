@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Calculator as CalculatorIcon, Info, X } from "lucide-react";
 import { submitToGoogleSheets } from "../utils/sheets";
+import { useState, useEffect } from "react";
 
 interface CalculatorInputs {
  deliveriesPerYear: number;
@@ -151,14 +152,20 @@ const Calculator = () => {
  providerTimeSavings;
 
  setResults({
- denialSavings,
- roomUtilizationSavings,
- roomUtilizationSavingsMultiplied,
- nurseTimeSavingsShift,
- adminTimeSavings,
- providerTimeSavings,
- totalSavings,
- });
+    denialSavings,
+    roomUtilizationSavings,
+    roomUtilizationSavingsMultiplied,
+    nurseTimeSavingsShift,
+    nurseTimeSavingsWeek,
+    nurseTimeSavingsYear,
+    adminTimeSavings,
+    adminTimeSavingsWeek,
+    adminTimeSavingsYear,
+    providerTimeSavings,
+    providerTimeSavingsWeek,
+    providerTimeSavingsYear,
+    totalSavings,
+  });
 
  setTimeout(() => {
  if (resultsRef.current && window.innerWidth < 1024) {
@@ -220,21 +227,21 @@ const Calculator = () => {
  inputs: [
  {
  key: "csectionCount",
- label: "Annual Number of Scheduled C-Sections",
+ label: "Scheduled C-Sections Per Year",
  },
  {
  key: "csectionlagTimes",
  label:
- "Average Admission to Scheduled C-Section Start Lag Time in Hours",
+ "Avg. Admission-to-Start Time for C-Sections (Hours)",
  },
  {
  key: "inductionCount",
- label: "Annual Number of Scheduled Inductions",
+ label: "Scheduled Inductions Per Year",
  },
  {
  key: "inductionlagTimes",
  label:
- "Average Admission to Scheduled Induction Start Lag Time in Hours",
+ "Avg. Admission-to-Start Time for Inductions (Hours)",
  },
  ],
  },
@@ -243,15 +250,15 @@ const Calculator = () => {
  inputs: [
  {
  key: "nurseCount",
- label: "Average Nurse Count per Shift",
+ label: "Avg. # of Nurses per Shift",
  },
  {
  key: "adminCount",
- label: "Average Administrative Staff Count per Shift",
+ label: "Avg. # of Admin Staff per Shift",
  },
  {
  key: "providerCount",
- label: "Average Provider Count per Shift",
+ label: "Avg. # of Providers per Shift",
  },
  ],
  },
@@ -370,7 +377,18 @@ const Calculator = () => {
  </div>
  ))}
  </div>
- </div>
+ </div>useEffect(() => {
+  calculateSavings();
+}, [inputs]);
+
+const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target;
+  setInputs((prev) => ({
+    ...prev,
+    [name]: parseFloat(value) || 0,
+  }));
+};
+
  ))}
  <button
  onClick={calculateSavings}
@@ -405,7 +423,7 @@ const Calculator = () => {
  per year
  </span>
  </div>
- <p className="text-sm text-birthmodel-gray mt-2">
+ <p className="text-sm font-medium text-birthmodel-gray mb-1 mt-2 italic">
  Based on a 94% reduction in first-pass denials
  </p>
  </div>
@@ -422,7 +440,7 @@ const Calculator = () => {
  hours per year saved with Birth Model
  </span>
  </div>
- <p className="text-sm text-birthmodel-gray mt-2">
+ <p className="text-sm font-medium text-birthmodel-gray mb-1 mt-2 italic">
  Based on 45% improvement in efficiency from the current{" "}
  {results.roomUtilizationSavings.toLocaleString()} hours per
  year underutilized
@@ -459,12 +477,13 @@ const Calculator = () => {
  hrs/years
  </span>
  <p className="text-xs font-medium text-birthmodel-gray mb-1 mt-2 italic">
- based on 3hrs/shift saved per nurse
+3 hours saved per nurse per shift
  </p>
  </div>
  <div className="bg-white p-4 rounded-lg">
  <p className="text-sm font-medium text-birthmodel-gray mb-1" style={{display:"inline"}}>
  Administrators
+ <br/>
  </p>
  <p className="text-xl font-bold text-birthmodel-teal" style={{display:"inline"}}>
  {results.adminTimeSavings.toLocaleString()}
@@ -487,12 +506,14 @@ const Calculator = () => {
  hrs/years
  </span>
  <p className="text-xs font-medium text-birthmodel-gray mb-1 mt-2 italic">
- based on 2hrs/shift saved per administrator
+ 2 hours saved per administrator per shift
  </p>
  </div>
  <div className="bg-white p-4 rounded-lg">
  <p className="text-sm font-medium text-birthmodel-gray mb-1" style={{display:"inline"}}>
  Providers
+ <div>
+ </div>
  </p>
  <p className="text-xl font-bold text-birthmodel-teal" style={{display:"inline"}}>
  {results.providerTimeSavings.toLocaleString()}
@@ -515,11 +536,7 @@ const Calculator = () => {
  hrs/years
  </span>
  <p className="text-xs font-medium text-birthmodel-gray mb-1 mt-2 italic">
- based on 2.5hrs/shift saved per provider
- </p>
- </div>
- <div className="bg-white p-4 rounded-lg">
- <p className="text-sm font-medium text-birthmodel-gray mb-1" style={{display:"inline"}}>
+ 2.5 hours saved per provider per shift
  </p>
  </div>
  </div>
@@ -710,9 +727,9 @@ const Calculator = () => {
  Thank You!
  </h3>
  <p className="text-birthmodel-gray">
- Our team will get back to you shortly to discuss your
+ Our team will get back to you shortly to discuss your annual
  potential savings of $
- {results.totalSavings.toLocaleString()} per year.
+ {results.denialSavings.toLocaleString()}, {results.roomUtilizationSavingsMultiplied.toLocaleString()} hrs of room time. Additionally, patients will benefit from an additional face-to-face {results.nurseTimeSavingsYear.toLocaleString()} hrs of nursing time, {results.adminTimeSavingsYear.toLocaleString()} hrs of admin time, and {results.providerTimeSavingsYear.toLocaleString()} hrs of provider time.
  </p>
  </div>
  )}
