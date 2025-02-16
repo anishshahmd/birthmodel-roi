@@ -24,8 +24,14 @@ interface CalculationResults {
  roomUtilizationSavings: number;
  roomUtilizationSavingsMultiplied: number;
  nurseTimeSavingsShift: number;
+ nurseTimeSavingsWeek: number;
+ nurseTimeSavingsYear: number;
  adminTimeSavings: number;
+ adminTimeSavingsWeek: number;
+ adminTimeSavingsYear: number;
  providerTimeSavings: number;
+ providerTimeSavingsWeek: number;
+ providerTimeSavingsYear: number;
  totalSavings: number;
 }
 
@@ -129,8 +135,14 @@ const Calculator = () => {
  inputs.inductionlagTimes * inputs.inductionCount;
  const roomUtilizationSavingsMultiplied = roomUtilizationSavings * 0.45;
  const nurseTimeSavingsShift = 3 * inputs.nurseCount;
+ const nurseTimeSavingsWeek = 42 * inputs.nurseCount;
+ const nurseTimeSavingsYear = 2184 * inputs.nurseCount;
  const adminTimeSavings = 2 * inputs.adminCount;
+ const adminTimeSavingsWeek = 28 * inputs.adminCount;
+ const adminTimeSavingsYear = 1456 * inputs.adminCount;
  const providerTimeSavings = 2.5 * inputs.providerCount;
+ const providerTimeSavingsWeek = 37.5 * inputs.providerCount;
+ const providerTimeSavingsYear = 1950 * inputs.providerCount;
  const totalSavings =
  denialSavings +
  roomUtilizationSavings +
@@ -434,14 +446,14 @@ const Calculator = () => {
  </span>
  <br/>
  <p className="text-xl font-bold text-birthmodel-teal" style={{display:"inline"}}>
- {results.nurseTimeSavingsShift.toLocaleString()}
+ {results.nurseTimeSavingsWeek.toLocaleString()}
  </p>
  <span className="ml-2 text-xs text-birthmodel-gray italic">
  hrs/week
  </span>
  <br/>
  <p className="text-xl font-bold text-birthmodel-teal " style={{display:"inline"}}>
- {results.nurseTimeSavingsShift.toLocaleString()}
+ {results.nurseTimeSavingsYear.toLocaleString()}
  </p>
  <span className="ml-2 text-xs text-birthmodel-gray italic">
  hrs/years
@@ -454,27 +466,64 @@ const Calculator = () => {
  <p className="text-sm font-medium text-birthmodel-gray mb-1" style={{display:"inline"}}>
  Administrators
  </p>
- <p className="text-xl font-bold text-birthmodel-teal">
+ <p className="text-xl font-bold text-birthmodel-teal" style={{display:"inline"}}>
  {results.adminTimeSavings.toLocaleString()}
  </p>
- <p className="text-xs text-birthmodel-gray mt-1">
- 2 hrs/shift saved per administrator
+ <span className="ml-2 text-xs text-birthmodel-gray italic">
+ hrs/shift
+ </span>
+ <br/>
+ <p className="text-xl font-bold text-birthmodel-teal" style={{display:"inline"}}>
+ {results.adminTimeSavingsWeek.toLocaleString()}
+ </p>
+ <span className="ml-2 text-xs text-birthmodel-gray italic">
+ hrs/week
+ </span>
+ <br/>
+ <p className="text-xl font-bold text-birthmodel-teal " style={{display:"inline"}}>
+ {results.adminTimeSavingsYear.toLocaleString()}
+ </p>
+ <span className="ml-2 text-xs text-birthmodel-gray italic">
+ hrs/years
+ </span>
+ <p className="text-xs font-medium text-birthmodel-gray mb-1 mt-2 italic">
+ based on 2hrs/shift saved per administrator
  </p>
  </div>
  <div className="bg-white p-4 rounded-lg">
  <p className="text-sm font-medium text-birthmodel-gray mb-1" style={{display:"inline"}}>
  Providers
  </p>
- <p className="text-xl font-bold text-birthmodel-teal">
+ <p className="text-xl font-bold text-birthmodel-teal" style={{display:"inline"}}>
  {results.providerTimeSavings.toLocaleString()}
  </p>
- <p className="text-xs text-birthmodel-gray mt-1">
- 2.5 hrs/shift saved per provider
+ <span className="ml-2 text-xs text-birthmodel-gray italic">
+ hrs/shift
+ </span>
+ <br/>
+ <p className="text-xl font-bold text-birthmodel-teal" style={{display:"inline"}}>
+ {results.providerTimeSavingsWeek.toLocaleString()}
+ </p>
+ <span className="ml-2 text-xs text-birthmodel-gray italic">
+ hrs/week
+ </span>
+ <br/>
+ <p className="text-xl font-bold text-birthmodel-teal " style={{display:"inline"}}>
+ {results.providerTimeSavingsYear.toLocaleString()}
+ </p>
+ <span className="ml-2 text-xs text-birthmodel-gray italic">
+ hrs/years
+ </span>
+ <p className="text-xs font-medium text-birthmodel-gray mb-1 mt-2 italic">
+ based on 2.5hrs/shift saved per provider
+ </p>
+ </div>
+ <div className="bg-white p-4 rounded-lg">
+ <p className="text-sm font-medium text-birthmodel-gray mb-1" style={{display:"inline"}}>
  </p>
  </div>
  </div>
  </div>
-
 
 
  <div className="relative">
