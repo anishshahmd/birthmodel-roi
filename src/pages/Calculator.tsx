@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Calculator as CalculatorIcon, Info, X } from "lucide-react";
 import { submitToGoogleSheets } from "../utils/sheets";
-import { useState, useEffect } from "react";
+
 
 interface CalculatorInputs {
  deliveriesPerYear: number;
@@ -134,7 +134,7 @@ const Calculator = () => {
  const roomUtilizationSavings =
  inputs.csectionCount * inputs.csectionlagTimes +
  inputs.inductionlagTimes * inputs.inductionCount;
- const roomUtilizationSavingsMultiplied = roomUtilizationSavings * 0.45;
+ const roomUtilizationSavingsMultiplied = roomUtilizationSavings * 0.55;
  const nurseTimeSavingsShift = 3 * inputs.nurseCount;
  const nurseTimeSavingsWeek = 42 * inputs.nurseCount;
  const nurseTimeSavingsYear = 2184 * inputs.nurseCount;
@@ -273,11 +273,13 @@ const Calculator = () => {
  alt="BirthModel"
  className="h-12 md:h-16 mx-auto mb-6 md:mb-8"
  />
- <h1 className="text-3xl md:text-5xl text-birthmodel-teal tracking-tight">
+ <h1 className="text-2xl md:text-3xl text-birthmodel-teal tracking-tight">
  ROI Calculator
  </h1>
  <p className="text-base md:text-lg text-birthmodel-gray mt-3">
- Calculate your potential savings with our AI-driven platform
+ Calculate your potential savings with our Birth Model's AI-driven maternal care platform. </p>
+ <p className="text-base md:text-lg text-birthmodel-gray mt-3"> 
+ We’re reducing burnout, identifying patient care disparities, and closing critical revenue gaps in maternal health worldwide.
  </p>
  </div>
 
@@ -371,36 +373,25 @@ const Calculator = () => {
  : key === "lagTimes"
  ? 0.5
  : 1
- }
- />
- </div>
- </div>
- ))}
- </div>
- </div>useEffect(() => {
-  calculateSavings();
-}, [inputs]);
-
-const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const { name, value } = e.target;
-  setInputs((prev) => ({
-    ...prev,
-    [name]: parseFloat(value) || 0,
-  }));
-};
-
- ))}
- <button
- onClick={calculateSavings}
- // disabled={results !== null}
- className={`w-full px-6 py-4 rounded-xl flex items-center justify-center text-lg shadow-lg transition-all duration-200 ${
- "bg-birthmodel-teal text-white hover:bg-opacity-90"
- } sticky bottom-4 lg:relative lg:bottom-0 z-10`}
- >
- <CalculatorIcon className="w-6 h-6 mr-2" />
- {results ? "Recalculate" : "Calculate Savings"}
- </button>
- </div>
+}
+/>
+</div>
+</div>
+))}
+</div>
+</div>
+))}
+<button
+onClick={calculateSavings}
+// disabled={results !== null}
+className={`w-full px-6 py-4 rounded-xl flex items-center justify-center text-lg shadow-lg transition-all duration-200 ${
+"bg-birthmodel-teal text-white hover:bg-opacity-90"
+} sticky bottom-4 lg:relative lg:bottom-0 z-10`}
+>
+<CalculatorIcon className="w-6 h-6 mr-2" />
+{results ? "Recalculate" : "Calculate Savings"}
+</button>
+</div>
 
  {results ? (
  <div
@@ -412,7 +403,7 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  </h2>
  <div className="space-y-6">
  <div className="bg-birthmodel-blue-light/30 border-l-4 border-birthmodel-teal p-6 rounded-xl">
- <h3 className="text-lg font-medium text-birthmodel-teal mb-2">
+ <h3 className="text-lg font-bold text-birthmodel-teal mb-2">
  Reduced First-Pass Claim Denials
  </h3>
  <div className="flex items-baseline">
@@ -429,7 +420,7 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  </div>
 
  <div className="bg-birthmodel-blue-light/30 border-l-4 border-birthmodel-teal p-6 rounded-xl">
- <h3 className="text-lg font-medium text-birthmodel-teal mb-2">
+ <h3 className="text-lg font-bold text-birthmodel-teal mb-2">
  Room and Patient Time Optimization
  </h3>
  <div className="flex items-baseline">
@@ -441,19 +432,19 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  </span>
  </div>
  <p className="text-sm font-medium text-birthmodel-gray mb-1 mt-2 italic">
- Based on 45% improvement in efficiency from the current{" "}
+ Based on 55% improvement in efficiency from the current{" "}
  {results.roomUtilizationSavings.toLocaleString()} hours per
  year underutilized
  </p>
  </div>
 
  <div className="bg-birthmodel-blue-light/30 border-l-4 border-birthmodel-teal p-6 rounded-xl">
- <h3 className="text-lg font-medium text-birthmodel-teal mb-4">
+ <h3 className="text-lg font-bold text-birthmodel-teal mb-4">
  Increased Patient Contact Time Results in Improved HCAHPS
  </h3>
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
  <div className="bg-white p-4 rounded-lg">
- <p className="text-sm font-medium text-birthmodel-gray mb-1">
+ <p className="text-sm font-bold text-birthmodel-gray mb-1">
  Nurses
  </p>
  <p className="text-xl font-bold text-birthmodel-teal" style={{display:"inline"}}>
@@ -481,7 +472,7 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  </p>
  </div>
  <div className="bg-white p-4 rounded-lg">
- <p className="text-sm font-medium text-birthmodel-gray mb-1" style={{display:"inline"}}>
+ <p className="text-sm font-bold text-birthmodel-gray mb-1" style={{display:"inline"}}>
  Administrators
  <br/>
  </p>
@@ -510,7 +501,7 @@ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
  </p>
  </div>
  <div className="bg-white p-4 rounded-lg">
- <p className="text-sm font-medium text-birthmodel-gray mb-1" style={{display:"inline"}}>
+ <p className="text-sm font-bold text-birthmodel-gray mb-1" style={{display:"inline"}}>
  Providers
  <div>
  </div>
