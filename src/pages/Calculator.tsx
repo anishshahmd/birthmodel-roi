@@ -662,7 +662,7 @@ className={`w-full px-6 py-4 rounded-xl flex items-center justify-center text-lg
  onChange={handleContactFormChange}
  className="w-full px-4 py-3 border-2 border-birthmodel-blue-light rounded-lg focus:border-birthmodel-teal focus:ring-0 transition-colors"
  rows={4}
- placeholder="Any specific requirements or questions..."
+ placeholder="Please let us know if you have any special requirements or questions!"
  />
  </div>
  </div>
