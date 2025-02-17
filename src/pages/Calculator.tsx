@@ -268,19 +268,6 @@ const Calculator = () => {
  <div className="min-h-screen bg-[#F4FBFC] px-4 py-8 font-montserrat overflow-x-hidden">
  <div className="max-w-7xl mx-auto">
  <div className="text-center mb-8 md:mb-12">
- <img
- src="https://images.squarespace-cdn.com/content/v1/623b4a3080d2463645e1be23/1f8629de-916e-49b0-b9ea-41d2ece7911d/Original+on+Transparent.png?format=1500w"
- alt="BirthModel"
- className="h-12 md:h-16 mx-auto mb-6 md:mb-8"
- />
- <h1 className="text-2xl md:text-3xl text-birthmodel-teal tracking-tight">
- ROI Calculator
- </h1>
- <p className="text-base md:text-lg text-birthmodel-gray mt-3">
- Calculate your potential savings with our Birth Model's AI-driven maternal care platform. </p>
- <p className="text-base md:text-lg text-birthmodel-gray mt-3"> 
- We’re reducing burnout, identifying patient care disparities, and closing critical revenue gaps in maternal health worldwide.
- </p>
  </div>
 
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-start">
